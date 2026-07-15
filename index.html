@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Garden & Coffee — Bonsai & Cafe</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'g-bg': '#0D1117', 'g-dark': '#0A0D14',
+            'neon': '#4AF626', 'gold': '#C5A880', 'gold-b': '#FFD700',
+          },
+          fontFamily: {
+            serif: ['Playfair Display', 'serif'],
+            sans: ['DM Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <svg style="position:absolute;width:0;height:0;pointer-events:none">
+    <defs>
+      <filter id="liquid-filter">
+        <feTurbulence id="liquid-turb" type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="noise" seed="2"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="0" id="liquid-displace"/>
+      </filter>
+    </defs>
+  </svg>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Video Background -->
+  <video id="bg-video" autoplay muted loop playsinline preload="auto">
+    <source src="background.mp4" type="video/mp4">
+  </video>
+
+  <div id="loader">
+    <div class="loader-ring"></div>
+    <p class="text-gold font-serif text-lg tracking-wider">Garden & Coffee</p>
+  </div>
+
+  <!-- NAVIGATION -->
+  <nav class="nav-blur fixed top-0 left-0 w-full z-50 bg-g-bg/70 border-b border-white/5" role="navigation" aria-label="Thanh điều hướng chính">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="#hero" class="font-serif text-xl font-bold tracking-wide">
+        <span class="text-neon">Garden</span><span class="text-gold"> & </span><span class="text-white">Coffee</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-sm font-light tracking-wider uppercase">
+        <a href="#hero" class="nav-link text-white/70 hover:text-neon transition-colors" data-section="0">Trang chủ</a>
+        <a href="#collection" class="nav-link text-white/70 hover:text-neon transition-colors" data-section="1">Bộ sưu tập</a>
+        <a href="#coffee" class="nav-link text-white/70 hover:text-neon transition-colors" data-section="2">Cà phê</a>
+        <a href="#contact" class="nav-link text-white/70 hover:text-neon transition-colors" data-section="3">Liên hệ</a>
+      </div>
+      <button id="mobile-menu-btn" class="md:hidden text-white/70 hover:text-neon transition-colors" aria-label="Menu">
+        <i class="fas fa-bars text-xl"></i>
+      </button>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden border-t border-white/5 bg-g-bg/95 nav-blur">
+      <div class="flex flex-col px-6 py-4 gap-4 text-sm uppercase tracking-wider">
+        <a href="#hero" class="text-white/70 hover:text-neon transition-colors mobile-link" data-section="0">Trang chủ</a>
+        <a href="#collection" class="text-white/70 hover:text-neon transition-colors mobile-link" data-section="1">Bộ sưu tập</a>
+        <a href="#coffee" class="text-white/70 hover:text-neon transition-colors mobile-link" data-section="2">Cà phê</a>
+        <a href="#contact" class="text-white/70 hover:text-neon transition-colors mobile-link" data-section="3">Liên hệ</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="section-wrapper">
+
+    <!-- HERO -->
+    <section id="hero" class="min-h-screen flex items-center relative" data-shape="0">
+      <div class="max-w-7xl mx-auto px-6 w-full grid md:grid-cols-2 gap-8 items-center pt-20">
+        <div>
+          <p class="fade-up text-gold text-sm tracking-[0.3em] uppercase mb-4 font-light">01 / Chân dung thiên nhiên</p>
+          <h1 id="hero-title" class="fade-up font-serif text-5xl md:text-7xl font-black leading-tight mb-6">
+            Garden<br><span class="text-gold">&</span> Coffee
+          </h1>
+          <p id="hero-desc" class="fade-up text-white/60 text-lg md:text-xl font-light leading-relaxed mb-8 max-w-md">
+            Nơi nghệ thuật bonsai gặp gỡ nhượng thưởng cà phê — một chuyến đi cảm giác giữa tươi xanh và hương thơm.
+          </p>
+          <a href="#collection" class="fade-up cta-glow inline-block bg-transparent border border-neon text-neon px-8 py-4 rounded-full font-medium tracking-wider text-sm hover:bg-neon hover:text-black transition-all duration-400">
+            Khám phá Vườn Cây
+          </a>
+        </div>
+        <div class="hidden md:flex items-center justify-center"><div class="w-80 h-80"></div></div>
+      </div>
+      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/30 text-xs tracking-widest uppercase">
+        <span>Cuộn xuống</span>
+        <div class="w-px h-8 bg-gradient-to-b from-white/30 to-transparent animate-pulse"></div>
+      </div>
+    </section>
+
+        <!-- COLLECTION -->
+    <section id="collection" class="py-20 relative" data-shape="1">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="mb-10">
+          <p class="fade-up text-gold text-sm tracking-[0.3em] uppercase mb-2 font-light">02 / Báu vật của vườn</p>
+          <h2 class="fade-up font-serif text-3xl md:text-4xl font-bold mb-2">Những tác phẩm đang chờ bạn khám phá</h2>
+          <p class="fade-up text-white/40 text-base font-light max-w-xl">Mỗi thể cây là một câu chuyện, một hành trình rèn giũa giữa cửa tự nhiên và đôi bàn tay nghệ nhân.</p>
+        </div>
+
+        <div class="collection-split flex gap-6" style="height:clamp(340px,52vh,520px);">
+          <div class="w-2/3 relative rounded-2xl overflow-hidden bg-white/5">
+            <img id="main-bonsai-img" src="" alt="Bonsai" class="w-full h-full object-contain transition-all duration-500" loading="lazy">
+            <div class="absolute top-3 right-3 flex gap-2">
+              <button id="btn-lightbox" class="w-9 h-9 rounded-full bg-black/50 nav-blur flex items-center justify-center text-white/60 hover:text-neon transition-colors text-sm" aria-label="Phóng to"><i class="fas fa-expand"></i></button>
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-g-bg/80 via-transparent to-transparent pointer-events-none"></div>
+          </div>
+          <div id="bonsai-info" class="w-1/3 flex flex-col justify-center">
+            <h3 id="bonsai-name" class="font-serif text-2xl md:text-3xl font-bold mb-4 leading-tight">—</h3>
+            <div class="grid grid-cols-2 gap-2.5 mb-4">
+              <div class="bg-white/5 rounded-lg p-3 border border-white/5">
+                <p class="text-gold text-[10px] uppercase tracking-wider mb-0.5">Tuổi đời</p>
+                <p id="bonsai-age" class="text-white text-sm font-medium">—</p>
+              </div>
+              <div class="bg-white/5 rounded-lg p-3 border border-white/5">
+                <p class="text-gold text-[10px] uppercase tracking-wider mb-0.5">Dáng thể</p>
+                <p id="bonsai-style" class="text-white text-sm font-medium">—</p>
+              </div>
+              <div class="bg-white/5 rounded-lg p-3 border border-white/5">
+                <p class="text-gold text-[10px] uppercase tracking-wider mb-0.5">Chiều cao</p>
+                <p id="bonsai-height" class="text-white text-sm font-medium">—</p>
+              </div>
+              <div class="bg-white/5 rounded-lg p-3 border border-white/5">
+                <p class="text-gold text-[10px] uppercase tracking-wider mb-0.5">Ý nghĩa</p>
+                <p id="bonsai-meaning" class="text-white text-sm font-medium">—</p>
+              </div>
+            </div>
+            <p id="bonsai-desc" class="text-white/40 text-sm font-light leading-relaxed mb-5 line-clamp-3" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">—</p>
+            <button id="btn-ask-price" class="cta-glow bg-transparent border border-neon text-neon px-5 py-3 rounded-full font-medium tracking-wider text-xs hover:bg-neon hover:text-black transition-all duration-400">Liên hệ báo giá cây</button>
+          </div>
+        </div>
+
+        <div class="mt-5 flex items-center gap-4">
+          <div class="flex items-center gap-3 overflow-x-auto flex-1 pb-1" id="thumbnail-bar"></div>
+          <div class="flex items-center gap-4 flex-shrink-0">
+            <button id="prev-slide" class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-neon hover:border-neon transition-all text-xs" aria-label="Trước"><i class="fas fa-chevron-left"></i></button>
+            <span id="slide-counter" class="text-white/30 text-xs tracking-widest font-light min-w-[52px] text-center">— / —</span>
+            <button id="next-slide" class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-neon hover:border-neon transition-all text-xs" aria-label="Sau"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COFFEE -->
+    <section id="coffee" class="min-h-screen py-24 relative" data-shape="2">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="mb-16">
+          <p class="fade-up text-gold text-sm tracking-[0.3em] uppercase mb-3 font-light">03 / Thưởng thức</p>
+          <h2 class="fade-up font-serif text-4xl md:text-5xl font-bold mb-4">Thưởng Thức Cà Phê Tại Vườn</h2>
+          <p class="fade-up text-white/50 text-lg font-light max-w-2xl">Ngồi giữa vườn xanh, thưởng một ly cà phê thơm ngon và cảm nhận những điều bình dị nhất của cuộc sống.</p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-8">
+          <div class="fade-up relative rounded-2xl overflow-hidden" style="min-height:400px;">
+            <img src="./img/cf.jpg" alt="Không gian quán cà phê sân vườn" class="w-full h-full object-cover" loading="lazy">
+            <div class="absolute inset-0 bg-gradient-to-tr from-g-bg/60 to-transparent"></div>
+            <div class="absolute bottom-6 left-6 right-6">
+              <p class="font-serif text-2xl font-bold mb-2">Không gian xanh mát</p>
+              <p class="text-white/60 text-sm font-light">Ấm cúng dưới ánh đèn, thoang hương lá cây và cà phê.</p>
+            </div>
+          </div>
+          <div class="flex flex-col gap-6">
+            <div class="fade-up">
+              <h3 class="font-serif text-2xl font-bold mb-4 text-gold">Menu Trải Nghiệm</h3>
+              <div id="coffee-menu" class="flex flex-col gap-3"></div>
+            </div>
+            <div class="fade-up bg-white/5 rounded-2xl p-6 border border-white/5 mt-auto">
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-full bg-neon/10 flex items-center justify-center flex-shrink-0 mt-1"><i class="fas fa-leaf text-neon text-sm"></i></div>
+                <div>
+                  <p class="font-medium mb-1">Góc "Chill" yêu thích</p>
+                  <p class="text-white/50 text-sm font-light leading-relaxed">Ngồi góc sân vườn dưới tán cây bonsai già, nghe tiếng nước chảy róc rách từ thác nhỏ — đây là nơi khách hàng thích nhất để đọc sách và tận hưởng buổi sáng cuối tuần.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="min-h-screen py-24 relative" data-shape="3">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="mb-16">
+          <p class="fade-up text-gold text-sm tracking-[0.3em] uppercase mb-3 font-light">04 / Liên hệ</p>
+          <h2 class="fade-up font-serif text-4xl md:text-5xl font-bold mb-4">Đến gặp chúng tôi</h2>
+          <p class="fade-up text-white/50 text-lg font-light max-w-2xl">Hãy liên hệ hoặc đến trực tiếp để trải nghiệm không gian độc đáo của Garden & Coffee.</p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-8">
+          <div class="fade-up flex flex-col gap-6">
+            <a href="tel:0981581592" class="flex items-center gap-4 bg-white/5 rounded-2xl p-6 border border-white/5 hover:border-neon/30 transition-colors group">
+              <div class="w-14 h-14 rounded-full bg-neon/10 flex items-center justify-center flex-shrink-0 group-hover:bg-neon/20 transition-colors"><i class="fas fa-phone text-neon"></i></div>
+              <div><p class="text-white/50 text-sm mb-1">Số điện thoại</p><p class="text-white text-xl font-medium">0981 581 592</p></div>
+            </a>
+            <a href="https://maps.google.com/?q=10.5591,107.5338" target="_blank" rel="noopener noreferrer" class="flex items-start gap-4 bg-white/5 rounded-2xl p-6 border border-white/5 hover:border-gold/30 transition-colors group">
+              <div class="w-14 h-14 rounded-full bg-gold/10 flex items-center justify-center flex-shrink-0 group-hover:bg-gold/20 transition-colors"><i class="fas fa-map-marker-alt text-gold"></i></div>
+              <div>
+                <p class="text-white/50 text-sm mb-1">Địa chỉ</p>
+                <p class="text-white text-lg font-medium">Thèo Nèo, Bình Châu, Xuyên Mộc</p>
+                <p class="text-white/50 text-sm">Bà Rịa - Vũng Tàu</p>
+                <p class="text-white/25 text-xs mt-1">10°33'32.8"N 107°32'01.6"E</p>
+              </div>
+            </a>
+            <div class="flex items-center gap-4 bg-white/5 rounded-2xl p-6 border border-white/5">
+              <div class="w-14 h-14 rounded-full bg-gold-b/10 flex items-center justify-center flex-shrink-0"><i class="fas fa-clock text-gold-b"></i></div>
+              <div><p class="text-white/50 text-sm mb-1">Giờ mở cửa</p><p class="text-white text-lg font-medium">07:00 — 21:00</p><p class="text-white/50 text-sm">Thứ 2 — Chủ nhật</p></div>
+            </div>
+            <div class="rounded-2xl overflow-hidden border border-white/5 mt-2" style="height:220px;">
+              <iframe
+                src="https://maps.google.com/maps?q=10.5591,107.5338&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                class="w-full h-full map-dark border-0"
+                allowfullscreen loading="lazy"
+                title="Bản đồ Garden & Coffee">
+              </iframe>
+            </div>
+          </div>
+          <div class="fade-up">
+            <form id="contact-form" class="bg-white/5 rounded-2xl p-8 border border-white/5 flex flex-col gap-5" novalidate>
+              <h3 class="font-serif text-2xl font-bold mb-2">Gửi lời nhắn</h3>
+              <p class="text-white/50 text-sm font-light mb-4">Đặt lịch hẹn ghé thăm vườn hoặc gửi bất kỳ thắc mắc nào.</p>
+              <div>
+                <label for="c-name" class="text-white/50 text-sm mb-2 block">Họ và tên</label>
+                <input id="c-name" type="text" required placeholder="Nguyễn Văn A" class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/20 outline-none focus:border-gold transition-colors">
+                <p class="text-red-400 text-xs mt-1 hidden" data-error="c-name">Vui lòng nhập họ tên.</p>
+              </div>
+              <div>
+                <label for="c-phone" class="text-white/50 text-sm mb-2 block">Số điện thoại</label>
+                <input id="c-phone" type="tel" required placeholder="0912 345 678" class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/20 outline-none focus:border-gold transition-colors">
+                <p class="text-red-400 text-xs mt-1 hidden" data-error="c-phone">Vui lòng nhập số điện thoại hợp lệ.</p>
+              </div>
+              <div>
+                <label for="c-msg" class="text-white/50 text-sm mb-2 block">Lời nhắn</label>
+                <textarea id="c-msg" rows="4" placeholder="Tôi muốn đặt lịch xem bonsai vào cuối tuần..." class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/20 outline-none focus:border-gold transition-colors resize-none"></textarea>
+              </div>
+              <button type="submit" class="cta-glow w-full bg-neon text-black py-4 rounded-full font-bold tracking-wider text-sm hover:bg-neon/90 transition-all mt-2">Gửi lời nhắn</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/5 py-12">
+      <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-3">
+          <span class="font-serif text-lg font-bold"><span class="text-neon">Garden</span><span class="text-gold"> & </span>Coffee</span>
+          <span class="text-white/20 text-sm">|</span>
+          <span class="text-white/30 text-sm font-light">Bà Rịa - Vũng Tàu</span>
+        </div>
+        <p class="text-white/20 text-xs text-center">Garden & Coffee — Nơi thiên nhiên gặp gỡ nghệ thuật</p>
+        <a href="admin.html" class="text-white/15 hover:text-white/40 transition-colors text-xs flex items-center gap-1"><i class="fas fa-cog"></i> <span>Quản trị</span></a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox" class="fixed inset-0 z-[100] bg-black/95 hidden items-center justify-center cursor-zoom-out" role="dialog" aria-label="Xem ảnh lớn">
+    <img id="lightbox-img" src="" alt="" class="max-w-[90vw] max-h-[90vh] object-contain rounded-lg">
+    <button class="absolute top-6 right-6 text-white/50 hover:text-white text-2xl" aria-label="Đóng"><i class="fas fa-times"></i></button>
+  </div>
+
+  <!-- MODAL BÁO GIÁ -->
+  <div id="price-modal" class="fixed inset-0 z-[100] bg-black/80 hidden items-center justify-center" role="dialog" aria-label="Liên hệ báo giá">
+    <div class="bg-g-dark border border-white/10 rounded-2xl p-8 max-w-md w-[90%] relative">
+      <button id="close-price-modal" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white/40 hover:text-white transition-colors" aria-label="Đóng">
+        <i class="fas fa-times text-sm"></i>
+      </button>
+      <div class="text-center mb-6">
+        <div class="w-14 h-14 rounded-full bg-neon/10 flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-seedling text-neon text-xl"></i>
+        </div>
+        <h3 class="font-serif text-xl font-bold mb-2">Liên hệ báo giá</h3>
+        <p class="text-white/40 text-sm">Đang xem: <span id="modal-bonsai-name" class="text-gold font-medium">—</span></p>
+      </div>
+      <p class="text-white/50 text-sm text-center mb-6 leading-relaxed">Nhấn vào một trong hai cách bên dưới để được tư vấn giá và đặt mua cây bonsai.</p>
+      <div class="flex flex-col gap-3">
+        <a href="https://zalo.me/0981581592" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-3 bg-[#0068FF] hover:bg-[#0058DD] text-white py-4 rounded-xl font-medium text-sm transition-colors">
+          <i class="fab fa-zalo text-lg"></i>
+          <span>Chat qua Zalo</span>
+        </a>
+        <a href="tel:0981581592" class="flex items-center justify-center gap-3 bg-neon hover:bg-neon/90 text-black py-4 rounded-xl font-bold text-sm transition-colors">
+          <i class="fas fa-phone"></i>
+          <span>Gọi 0981 581 592</span>
+        </a>
+      </div>
+      <p class="text-white/20 text-xs text-center mt-5">Phục vụ từ 07:00 — 21:00, Thứ 2 — Chủ nhật</p>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/video-bg.js"></script>
+</body>
+</html>
