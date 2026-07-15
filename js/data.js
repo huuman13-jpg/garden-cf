@@ -40,7 +40,7 @@
       style: 'Phong Thủy',
       meaning: 'Bảo vệ, vượng gia',
       description: 'Tùng La Hán — vua của các loài bonsai. Thân cây cổ kính với dấu tích sharimiki (bóc vỏ trắng), rễ chân trần bám chặt đất. Tán lá kim xanh thẫm xếp lớp như mái hiên, thể hiện tài năng nghệ nhân hàng thập kỷ.',
-      image: './img/tunglakim.jpg'
+      image: './img/tunglakimnhaban.jpg'
     },
     {
       id: 'XR-05',
