@@ -1,165 +1,581 @@
-:root {
-  --bg: #0D1117; --fg: #FFFFFF; --muted: #8B949E;
-  --accent: #C5A880; --neon: #4AF626; --gold-b: #FFD700;
-  --card: rgba(255,255,255,0.04); --border: rgba(255,255,255,0.08);
-}
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  background: var(--bg); color: var(--fg);
-  font-family: 'DM Sans', sans-serif; overflow-x: hidden;
-  width: 100%;
-}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản trị — Garden & Coffee</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'g-bg': '#0D1117', 'g-dark': '#0A0D14',
+            'neon': '#4AF626', 'gold': '#C5A880', 'gold-b': '#FFD700',
+          },
+          fontFamily: {
+            serif: ['Playfair Display', 'serif'],
+            sans: ['DM Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --bg: #0D1117; --fg: #FFFFFF; --muted: #8B949E;
+      --accent: #C5A880; --neon: #4AF626; --gold-b: #FFD700;
+      --card: rgba(255,255,255,0.04); --border: rgba(255,255,255,0.08);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--fg); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+    ::selection { background: var(--neon); color: #000; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
 
-/* Fallback chiều cao động cho di động: tránh layout bị nhảy/giật khi
-   thanh địa chỉ trình duyệt (Safari/Chrome mobile) ẩn/hiện lúc cuộn. */
-.min-h-screen { min-height: 100vh; }
-@supports (height: 100dvh) {
-  .min-h-screen { min-height: 100dvh; }
-}
-::selection { background: var(--neon); color: #000; }
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .input-field {
+      width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px 14px; color: var(--fg);
+      outline: none; font-size: 14px; transition: border-color 0.2s;
+    }
+    .input-field:focus { border-color: var(--accent); }
+    .input-field::placeholder { color: rgba(255,255,255,0.2); }
 
-#bg-canvas {
-  position: fixed; top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: 0; pointer-events: none;
-}
+    .rte-area {
+      min-height: 140px; padding: 14px; border: 1px solid var(--border);
+      border-radius: 10px; background: rgba(0,0,0,0.3); color: var(--fg);
+      outline: none; line-height: 1.7; font-size: 14px;
+    }
+    .rte-area:focus { border-color: var(--accent); }
 
-.section-wrapper { position: relative; z-index: 1; }
+    .rte-btn {
+      padding: 5px 12px; border: 1px solid var(--border);
+      border-radius: 6px; background: var(--card); color: var(--fg);
+      cursor: pointer; font-size: 13px; transition: background 0.2s;
+    }
+    .rte-btn:hover { background: rgba(255,255,255,0.1); }
 
-#loader {
-  position: fixed; inset: 0; z-index: 9999;
-  background: var(--bg);
-  display: flex; align-items: center; justify-content: center;
-  flex-direction: column; gap: 16px;
-  transition: opacity 0.8s ease, visibility 0.8s ease;
-}
-#loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-.loader-ring {
-  width: 48px; height: 48px;
-  border: 3px solid var(--border);
-  border-top-color: var(--neon);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
+    .btn-primary {
+      background: var(--neon); color: #000; font-weight: 700;
+      padding: 10px 20px; border-radius: 999px; border: none;
+      cursor: pointer; font-size: 14px; letter-spacing: 0.05em;
+      transition: all 0.3s; width: 100%;
+    }
+    .btn-primary:hover { box-shadow: 0 0 20px rgba(74,246,38,0.3); }
 
-.nav-blur {
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
+    .btn-secondary {
+      background: rgba(255,255,255,0.1); color: var(--fg);
+      font-weight: 500; padding: 10px 20px; border-radius: 999px;
+      border: none; cursor: pointer; font-size: 14px; width: 100%;
+      transition: background 0.2s;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.15); }
 
-.cta-glow {
-  position: relative; overflow: hidden;
-  transition: all 0.4s ease;
-}
-.cta-glow::before {
-  content: ''; position: absolute; inset: -2px;
-  border-radius: inherit;
-  background: linear-gradient(135deg, var(--neon), var(--gold-b));
-  opacity: 0; transition: opacity 0.4s; z-index: -1;
-}
-.cta-glow:hover::before { opacity: 1; }
-.cta-glow:hover { box-shadow: 0 0 30px rgba(74,246,38,0.3); }
+    .btn-icon {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: rgba(255,255,255,0.05); border: none;
+      color: rgba(255,255,255,0.4); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; font-size: 12px;
+    }
+    .btn-icon.edit:hover { color: var(--neon); background: rgba(74,246,38,0.1); }
+    .btn-icon.delete:hover { color: #f87171; background: rgba(248,113,113,0.1); }
+    .btn-icon.view:hover { color: var(--gold); background: rgba(197,168,128,0.1); }
 
-.thumb-item {
-  transition: all 0.3s ease;
-  border: 2px solid transparent; cursor: pointer;
-}
-.thumb-item.active, .thumb-item:hover {
-  border-color: var(--neon); transform: scale(1.08);
-}
+    .card {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 14px; padding: 20px;
+    }
 
-.toast-enter { transform: translateY(0) !important; opacity: 1 !important; }
+    .tab-btn {
+      padding: 8px 18px; border-radius: 10px; font-size: 13px;
+      font-weight: 500; cursor: pointer; transition: all 0.2s; border: 1px solid;
+    }
+    .tab-btn.active {
+      background: rgba(74,246,38,0.1); color: var(--neon);
+      border-color: rgba(74,246,38,0.2);
+    }
+    .tab-btn:not(.active) {
+      background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.5);
+      border-color: rgba(255,255,255,0.08);
+    }
+    .tab-btn:not(.active):hover { background: rgba(255,255,255,0.08); }
 
-.admin-panel {
-  transform: translateX(100%);
-  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
-}
-.admin-panel.open { transform: translateX(0); }
+    .toast-enter { transform: translateY(0) !important; opacity: 1 !important; }
 
-.rte-btn {
-  padding: 4px 10px; border: 1px solid var(--border);
-  border-radius: 4px; background: var(--card); color: var(--fg);
-  cursor: pointer; font-size: 13px; transition: background 0.2s;
-}
-.rte-btn:hover { background: rgba(255,255,255,0.1); }
-.rte-area {
-  min-height: 120px; padding: 12px;
-  border: 1px solid var(--border); border-radius: 8px;
-  background: rgba(0,0,0,0.3); color: var(--fg);
-  outline: none; line-height: 1.6;
-}
-.rte-area:focus { border-color: var(--accent); }
+    .stat-card {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 14px; padding: 20px; text-align: center;
+    }
+    .stat-card .num { font-size: 2rem; font-weight: 700; line-height: 1; }
+    .stat-card .label { font-size: 12px; color: var(--muted); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.1em; }
 
-.fade-up { opacity: 0; transform: translateY(40px); }
+    .preview-modal {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,0.85); display: none;
+      align-items: center; justify-content: center;
+    }
+    .preview-modal.open { display: flex; }
 
-.map-dark {
-  filter: invert(92%) hue-rotate(180deg) brightness(0.85) contrast(0.9);
-}
+    @media (max-width: 768px) {
+      .admin-grid { grid-template-columns: 1fr !important; }
+    }
+  </style>
+</head>
+<body>
 
-@media (max-width: 768px) {
-  /* Khu vực "Bộ sưu tập": trước đây ảnh + thông tin dùng chung 1 chiều cao
-     cố định (clamp 340-520px) nên khi xếp chồng dọc trên điện thoại, cả
-     ảnh lẫn phần thông tin (4 ô số liệu + mô tả + nút) bị bóp/tràn ra ngoài.
-     Bỏ chiều cao ép buộc, để mỗi phần tự co giãn theo nội dung. */
-  .collection-split {
-    flex-direction: column !important;
-    height: auto !important;
-    gap: 20px !important;
-  }
-  .collection-split > div { width: 100% !important; }
-  .collection-split > div:first-child {
-    height: 60vh;
-    max-height: 340px;
-  }
-  @supports (height: 60dvh) {
-    .collection-split > div:first-child { height: 60dvh; }
-  }
+  <!-- HEADER -->
+  <header class="border-b border-white/5 bg-g-bg/80 backdrop-blur-xl sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <a href="index.html" class="font-serif text-lg font-bold tracking-wide">
+          <span class="text-neon">Garden</span><span class="text-gold"> & </span><span class="text-white">Coffee</span>
+        </a>
+        <span class="text-white/10 text-sm">|</span>
+        <span class="text-white/40 text-sm font-light">Bảng điều khiển</span>
+      </div>
+      <a href="index.html" class="flex items-center gap-2 text-white/50 hover:text-neon transition-colors text-sm">
+        <i class="fas fa-external-link-alt text-xs"></i> Xem trang chủ
+      </a>
+    </div>
+  </header>
 
-  /* Ảnh minh hoạ khu cà phê: 400px cố định quá cao trên màn hình nhỏ,
-     khiến người dùng phải cuộn nhiều trước khi thấy menu. */
-  #coffee-photo { min-height: 260px !important; }
+  <!-- MAIN -->
+  <main class="max-w-6xl mx-auto px-6 py-10">
 
-  /* Vùng chạm (tap target) tối thiểu ~44px theo khuyến nghị cho di động —
-     các nút mũi tên trước/sau, nút phóng to ảnh trước đó chỉ 32px. */
-  #prev-slide, #next-slide {
-    width: 44px !important; height: 44px !important;
-  }
-  #btn-lightbox {
-    width: 44px !important; height: 44px !important;
-  }
-  #mobile-menu-btn { padding: 8px; margin: -8px; }
-  .mobile-link { padding: 10px 0; display: block; }
+    <!-- THỐNG KÊ -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+      <div class="stat-card">
+        <div class="num text-neon" id="stat-total">0</div>
+        <div class="label">Tổng cây</div>
+      </div>
+      <div class="stat-card">
+        <div class="num text-gold" id="stat-oldest">0</div>
+        <div class="label">Già nhất (năm)</div>
+      </div>
+      <div class="stat-card">
+        <div class="num text-gold-b" id="stat-tallest">0</div>
+        <div class="label">Cao nhất (cm)</div>
+      </div>
+      <div class="stat-card">
+        <div class="num text-white/60" id="stat-styles">0</div>
+        <div class="label">Dáng thể</div>
+      </div>
+    </div>
 
-  /* Thanh thumbnail: thu nhỏ đôi chút và giữ khoảng cách với cụm nút
-     điều hướng để không bị chật trên màn hình hẹp (<380px). */
-  #thumbnail-bar { gap: 8px !important; }
-  .thumb-item { width: 64px !important; height: 64px !important; }
+    <!-- TABS -->
+    <div class="flex gap-2 mb-8">
+      <button class="tab-btn active" data-tab="intro"><i class="fas fa-pen-nib mr-2 text-xs"></i>Giới thiệu</button>
+      <button class="tab-btn" data-tab="collection"><i class="fas fa-seedling mr-2 text-xs"></i>Bộ sưu tập</button>
+    </div>
 
-}
+    <!-- TAB: GIỚI THIỆU -->
+    <div id="tab-intro" class="tab-content">
+      <div class="card max-w-2xl">
+        <h2 class="font-serif text-2xl font-bold mb-6">Chỉnh sửa trang chủ</h2>
 
-/* Điện thoại xoay ngang / màn hình thấp: min-h-screen ở Hero khiến nội dung
-   bị đẩy quá xa và chỉ báo "Cuộn xuống" đè lên nút CTA. Giảm padding và bỏ
-   ép chiều cao tối thiểu trong trường hợp này. */
-@media (max-width: 900px) and (max-height: 480px) {
-  #hero { min-height: auto !important; padding-top: 80px; padding-bottom: 48px; }
-  #hero > .max-w-7xl { padding-top: 0 !important; }
-  #hero .absolute.bottom-8 { display: none; }
-}
+        <label class="text-white/50 text-sm mb-2 block">Tiêu đề chính</label>
+        <input id="adm-title" type="text" class="input-field mb-5">
 
-@media (max-width: 380px) {
-  #thumbnail-bar { gap: 6px !important; }
-  .thumb-item { width: 56px !important; height: 56px !important; }
-  #slide-counter { min-width: 40px !important; font-size: 11px; }
-}
+        <label class="text-white/50 text-sm mb-2 block">Mô tả (hỗ trợ định dạng)</label>
+        <div class="flex gap-1 mb-2">
+          <button class="rte-btn" data-cmd="bold"><i class="fas fa-bold"></i></button>
+          <button class="rte-btn" data-cmd="italic"><i class="fas fa-italic"></i></button>
+          <button class="rte-btn" data-cmd="underline"><i class="fas fa-underline"></i></button>
+        </div>
+        <div id="adm-desc" class="rte-area" contenteditable="true"></div>
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
+        <button id="save-intro" class="btn-primary mt-6">Lưu giới thiệu</button>
+
+        <!-- Xem trước -->
+        <div class="mt-8 pt-6 border-t border-white/5">
+          <p class="text-white/30 text-xs uppercase tracking-wider mb-4">Xem trước</p>
+          <div class="bg-black/30 rounded-xl p-6 border border-white/5">
+            <h1 id="preview-title" class="font-serif text-3xl md:text-4xl font-black leading-tight mb-4"></h1>
+            <p id="preview-desc" class="text-white/60 text-base font-light leading-relaxed"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: BỘ SƯU TẬP -->
+    <div id="tab-collection" class="tab-content hidden">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="font-serif text-2xl font-bold">Quản lý bộ sưu tập</h2>
+        <button id="add-bonsai-btn" class="flex items-center gap-2 bg-neon/10 text-neon px-5 py-2.5 rounded-full text-sm font-medium hover:bg-neon/20 transition-colors border border-neon/20">
+          <i class="fas fa-plus text-xs"></i> Thêm cây mới
+        </button>
+      </div>
+
+      <!-- FORM THÊM/SỬA -->
+      <div id="adm-bonsai-form" class="card mb-6 hidden">
+        <h3 id="form-heading" class="font-medium text-lg mb-5">Thêm cây mới</h3>
+        <div class="grid md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="text-white/50 text-xs mb-1.5 block">Tên cây</label>
+            <input id="adm-b-name" type="text" placeholder="VD: Bonsai Dự Cổ Thụ" class="input-field">
+          </div>
+          <div>
+            <label class="text-white/50 text-xs mb-1.5 block">Mã cây</label>
+            <input id="adm-b-id" type="text" placeholder="VD: BS-07" class="input-field">
+          </div>
+          <div>
+            <label class="text-white/50 text-xs mb-1.5 block">Tuổi đời</label>
+            <input id="adm-b-age" type="text" placeholder="VD: 45 Năm" class="input-field">
+          </div>
+          <div>
+            <label class="text-white/50 text-xs mb-1.5 block">Chiều cao</label>
+            <input id="adm-b-height" type="text" placeholder="VD: 85 cm" class="input-field">
+          </div>
+          <div>
+            <label class="text-white/50 text-xs mb-1.5 block">Dáng thể</label>
+            <input id="adm-b-style" type="text" placeholder="VD: Trực Huyền" class="input-field">
+          </div>
+          <div>
+            <label class="text-white/50 text-xs mb-1.5 block">Ý nghĩa</label>
+            <input id="adm-b-meaning" type="text" placeholder="VD: Kiên cường, tài lộc" class="input-field">
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="text-white/50 text-xs mb-1.5 block">Mô tả</label>
+          <textarea id="adm-b-desc" rows="3" placeholder="Mô tả chi tiết về cây bonsai..." class="input-field resize-none"></textarea>
+        </div>
+        <div class="mb-5">
+          <label class="text-white/50 text-xs mb-1.5 block">URL hình ảnh</label>
+          <input id="adm-b-img" type="text" placeholder="https://... hoặc để trống để tự tạo" class="input-field">
+          <p class="text-white/20 text-xs mt-1.5">Để trống sẽ tự động tạo ảnh placeholder</p>
+        </div>
+        <div class="flex gap-3">
+          <button id="save-bonsai" class="btn-primary">Lưu</button>
+          <button id="cancel-bonsai" class="btn-secondary">Hủy</button>
+        </div>
+      </div>
+
+      <!-- DANH SÁCH CÂY -->
+      <div id="adm-collection-list" class="grid md:grid-cols-2 gap-4 admin-grid"></div>
+    </div>
+
+  </main>
+
+  <!-- MODAL XEM ẢNH -->
+  <div id="preview-modal" class="preview-modal cursor-zoom-out">
+    <img id="preview-modal-img" src="" alt="" class="max-w-[90vw] max-h-[85vh] object-contain rounded-xl">
+    <button id="close-modal" class="absolute top-6 right-6 text-white/50 hover:text-white text-2xl w-10 h-10 rounded-full bg-black/50 flex items-center justify-center">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="js/data.js"></script>
+  <script>
+  (function() {
+    'use strict';
+
+    var G = window.GNC;
+    var bonsaiData = G.loadData('gnc_bonsai', G.DEFAULT_BONSAI);
+    var heroData = G.loadData('gnc_hero', {
+      title: 'Garden<br><span class="text-gold">&</span> Coffee',
+      desc: 'Nơi nghệ thuật bonsai gặp gỡ nhượng thưởng cà phê — một chuyến đi cảm giác giữa tươi xanh và hương thơm.'
+    });
+
+    // ============================================================
+    // THỐNG KÊ
+    // ============================================================
+    function updateStats() {
+      document.getElementById('stat-total').textContent = bonsaiData.length;
+
+      var maxAge = 0;
+      var maxHeight = 0;
+      var styles = {};
+      bonsaiData.forEach(function(b) {
+        var ageNum = parseInt(b.age) || 0;
+        if (ageNum > maxAge) maxAge = ageNum;
+        var hNum = parseInt(b.height) || 0;
+        if (hNum > maxHeight) maxHeight = hNum;
+        if (b.style && b.style !== 'N/A') styles[b.style] = true;
+      });
+      document.getElementById('stat-oldest').textContent = maxAge;
+      document.getElementById('stat-tallest').textContent = maxHeight;
+      document.getElementById('stat-styles').textContent = Object.keys(styles).length;
+    }
+    updateStats();
+
+    // ============================================================
+    // TABS
+    // ============================================================
+    document.querySelectorAll('.tab-btn').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(function(t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.add('hidden'); });
+        document.getElementById('tab-' + tab.dataset.tab).classList.remove('hidden');
+      });
+    });
+
+    // ============================================================
+    // GIỚI THIỆU
+    // ============================================================
+    var titleInput = document.getElementById('adm-title');
+    var descArea = document.getElementById('adm-desc');
+    var previewTitle = document.getElementById('preview-title');
+    var previewDesc = document.getElementById('preview-desc');
+
+    // Nạp dữ liệu vào form
+    var tempDiv = document.createElement('div');
+    tempDiv.innerHTML = heroData.title;
+    titleInput.value = tempDiv.textContent;
+    descArea.innerHTML = heroData.desc;
+    previewTitle.innerHTML = heroData.title;
+    previewDesc.innerHTML = heroData.desc;
+
+    // Live preview khi gõ
+    titleInput.addEventListener('input', function() {
+      var v = titleInput.value;
+      var parts = v.split(' & ');
+      if (parts.length === 2) {
+        previewTitle.innerHTML = '<span class="text-neon">' + parts[0].trim() + '</span><br><span class="text-gold">&</span> ' + parts[1].trim();
+      } else {
+        previewTitle.textContent = v;
+      }
+    });
+    descArea.addEventListener('input', function() {
+      previewDesc.innerHTML = descArea.innerHTML;
+    });
+
+    // RTE buttons
+    document.querySelectorAll('.rte-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() { document.execCommand(btn.dataset.cmd, false, null); });
+    });
+
+    // Lưu
+    document.getElementById('save-intro').addEventListener('click', function() {
+      var v = titleInput.value;
+      var parts = v.split(' & ');
+      if (parts.length === 2) {
+        heroData.title = '<span class="text-neon">' + parts[0].trim() + '</span><br><span class="text-gold">&</span> ' + parts[1].trim();
+      } else {
+        heroData.title = v;
+      }
+      heroData.desc = descArea.innerHTML;
+      G.saveData('gnc_hero', heroData);
+      G.showToast('Đã lưu giới thiệu!');
+    });
+
+    // ============================================================
+    // BỘ SƯU TẬP — DANH SÁCH
+    // ============================================================
+    var editingIdx = -1;
+    var formEl = document.getElementById('adm-bonsai-form');
+    var listEl = document.getElementById('adm-collection-list');
+
+        function renderList() {
+      listEl.innerHTML = '';
+      if (bonsaiData.length === 0) {
+        listEl.innerHTML = '<div class="col-span-2 text-center py-16 text-white/30"><i class="fas fa-seedling text-3xl mb-3 block"></i>Chưa có cây nào. Nhấn "Thêm cây mới" để bắt đầu.</div>';
+        return;
+      }
+
+      bonsaiData.forEach(function(b, i) {
+        var div = document.createElement('div');
+        div.className = 'card flex gap-4 items-start';
+        div.innerHTML =
+          '<img src="' + b.image + '" alt="' + b.name + '" class="w-20 h-20 rounded-lg object-cover flex-shrink-0 cursor-pointer view-img" data-idx="' + i + '">' +
+          '<div class="flex-1 min-w-0">' +
+            '<div class="flex items-start justify-between gap-2">' +
+              '<div class="min-w-0">' +
+                '<p class="text-white font-medium truncate">' + b.name + '</p>' +
+                '<p class="text-white/30 text-xs mt-0.5">' + b.id + '</p>' +
+              '</div>' +
+              '<div class="flex gap-1 flex-shrink-0">' +
+                '<button class="btn-icon move-up" data-idx="' + i + '" title="Lên trước"' + (i === 0 ? ' disabled style="opacity:0.2;pointer-events:none"' : '') + '><i class="fas fa-chevron-up" style="font-size:10px"></i></button>' +
+                '<button class="btn-icon move-down" data-idx="' + i + '" title="Xuống sau"' + (i === bonsaiData.length - 1 ? ' disabled style="opacity:0.2;pointer-events:none"' : '') + '><i class="fas fa-chevron-down" style="font-size:10px"></i></button>' +
+                '<button class="btn-icon view" data-idx="' + i + '" title="Xem ảnh"><i class="fas fa-image"></i></button>' +
+                '<button class="btn-icon edit" data-idx="' + i + '" title="Sửa"><i class="fas fa-pen"></i></button>' +
+                '<button class="btn-icon delete" data-idx="' + i + '" title="Xóa"><i class="fas fa-trash"></i></button>' +
+              '</div>' +
+            '</div>' +
+            '<div class="grid grid-cols-2 gap-2 mt-3">' +
+              '<div class="bg-white/3 rounded-lg px-3 py-2"><p class="text-gold text-[10px] uppercase tracking-wider">Tuổi</p><p class="text-white text-sm">' + b.age + '</p></div>' +
+              '<div class="bg-white/3 rounded-lg px-3 py-2"><p class="text-gold text-[10px] uppercase tracking-wider">Cao</p><p class="text-white text-sm">' + b.height + '</p></div>' +
+              '<div class="bg-white/3 rounded-lg px-3 py-2"><p class="text-gold text-[10px] uppercase tracking-wider">Dáng</p><p class="text-white text-sm">' + b.style + '</p></div>' +
+              '<div class="bg-white/3 rounded-lg px-3 py-2"><p class="text-gold text-[10px] uppercase tracking-wider">Ý nghĩa</p><p class="text-white text-sm">' + b.meaning + '</p></div>' +
+            '</div>' +
+            '<p class="text-white/40 text-xs mt-2 line-clamp-2" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">' + b.description + '</p>' +
+          '</div>';
+        listEl.appendChild(div);
+      });
+
+      // Gắn sự kiện
+      listEl.querySelectorAll('.btn-icon.move-up').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(btn.dataset.idx);
+          if (idx > 0) {
+            var temp = bonsaiData[idx];
+            bonsaiData[idx] = bonsaiData[idx - 1];
+            bonsaiData[idx - 1] = temp;
+            G.saveData('gnc_bonsai', bonsaiData);
+            renderList();
+            G.showToast('Đã chuyển lên trước');
+          }
+        });
+      });
+      listEl.querySelectorAll('.btn-icon.move-down').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(btn.dataset.idx);
+          if (idx < bonsaiData.length - 1) {
+            var temp = bonsaiData[idx];
+            bonsaiData[idx] = bonsaiData[idx + 1];
+            bonsaiData[idx + 1] = temp;
+            G.saveData('gnc_bonsai', bonsaiData);
+            renderList();
+            G.showToast('Đã chuyển xuống sau');
+          }
+        });
+      });
+      listEl.querySelectorAll('.btn-icon.edit').forEach(function(btn) {
+        btn.addEventListener('click', function() { openEditForm(parseInt(btn.dataset.idx)); });
+      });
+      listEl.querySelectorAll('.btn-icon.delete').forEach(function(btn) {
+        btn.addEventListener('click', function() { deleteBonsai(parseInt(btn.dataset.idx)); });
+      });
+      listEl.querySelectorAll('.btn-icon.view, .view-img').forEach(function(btn) {
+        btn.addEventListener('click', function() { openModal(parseInt(btn.dataset.idx)); });
+      });
+    }
+
+    renderList();
+
+    // ============================================================
+    // THÊM / SỬA
+    // ============================================================
+    var formFields = ['adm-b-name','adm-b-id','adm-b-age','adm-b-height','adm-b-style','adm-b-meaning','adm-b-desc','adm-b-img'];
+
+    document.getElementById('add-bonsai-btn').addEventListener('click', function() {
+      editingIdx = -1;
+      formFields.forEach(function(id) { document.getElementById(id).value = ''; });
+      document.getElementById('adm-b-id').value = 'BS-' + String(bonsaiData.length + 1).padStart(2, '0');
+      document.getElementById('form-heading').textContent = 'Thêm cây mới';
+      formEl.classList.remove('hidden');
+      formEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    function openEditForm(idx) {
+      editingIdx = idx;
+      var b = bonsaiData[idx];
+      document.getElementById('adm-b-name').value = b.name;
+      document.getElementById('adm-b-id').value = b.id;
+      document.getElementById('adm-b-age').value = b.age;
+      document.getElementById('adm-b-height').value = b.height;
+      document.getElementById('adm-b-style').value = b.style;
+      document.getElementById('adm-b-meaning').value = b.meaning;
+      document.getElementById('adm-b-desc').value = b.description;
+      document.getElementById('adm-b-img').value = b.image;
+      document.getElementById('form-heading').textContent = 'Sửa: ' + b.name;
+      formEl.classList.remove('hidden');
+      formEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    document.getElementById('cancel-bonsai').addEventListener('click', function() {
+      formEl.classList.add('hidden');
+    });
+
+    document.getElementById('save-bonsai').addEventListener('click', function() {
+      var name = document.getElementById('adm-b-name').value.trim();
+      if (!name) {
+        document.getElementById('adm-b-name').style.borderColor = '#f87171';
+        document.getElementById('adm-b-name').focus();
+        return;
+      }
+      document.getElementById('adm-b-name').style.borderColor = '';
+
+      var item = {
+        id: document.getElementById('adm-b-id').value.trim() || 'BS-' + String(bonsaiData.length + 1).padStart(2, '0'),
+        name: name,
+        age: document.getElementById('adm-b-age').value.trim() || 'N/A',
+        height: document.getElementById('adm-b-height').value.trim() || 'N/A',
+        style: document.getElementById('adm-b-style').value.trim() || 'N/A',
+        meaning: document.getElementById('adm-b-meaning').value.trim() || 'N/A',
+        description: document.getElementById('adm-b-desc').value.trim() || '',
+        image: document.getElementById('adm-b-img').value.trim() || 'https://picsum.photos/seed/bonsai-new-' + Date.now() + '/800/1000.jpg'
+      };
+
+      if (editingIdx >= 0) {
+        bonsaiData[editingIdx] = item;
+        G.showToast('Đã cập nhật "' + item.name + '"!');
+      } else {
+        bonsaiData.push(item);
+        G.showToast('Đã thêm "' + item.name + '"!');
+      }
+
+      G.saveData('gnc_bonsai', bonsaiData);
+      formEl.classList.add('hidden');
+      renderList();
+      updateStats();
+    });
+
+    // ============================================================
+    // XÓA — Xác nhận trước
+    // ============================================================
+    function deleteBonsai(idx) {
+      var b = bonsaiData[idx];
+      // Tạo modal xác nhận thay vì confirm()
+      var overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;';
+      overlay.innerHTML =
+        '<div style="background:#0A0D14;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:28px;max-width:380px;width:90%;text-align:center;">' +
+          '<div style="width:48px;height:48px;border-radius:50%;background:rgba(248,113,113,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">' +
+            '<i class="fas fa-trash" style="color:#f87171;font-size:18px;"></i>' +
+          '</div>' +
+          '<p style="font-size:16px;font-weight:600;margin-bottom:8px;">Xóa cây bonsai?</p>' +
+          '<p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:20px;">Bạn có chắc muốn xóa <strong style="color:#f87171;">"' + b.name + '"</strong>? Hành động này không thể hoàn tác.</p>' +
+          '<div style="display:flex;gap:10px;">' +
+            '<button id="del-cancel" class="btn-secondary">Hủy</button>' +
+            '<button id="del-confirm" style="background:#f87171;color:#fff;font-weight:700;padding:10px 20px;border-radius:999px;border:none;cursor:pointer;font-size:14px;width:100%;transition:opacity 0.2s;">Xóa</button>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(overlay);
+
+      overlay.querySelector('#del-cancel').addEventListener('click', function() { overlay.remove(); });
+      overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+      overlay.querySelector('#del-confirm').addEventListener('click', function() {
+        bonsaiData.splice(idx, 1);
+        G.saveData('gnc_bonsai', bonsaiData);
+        renderList();
+        updateStats();
+        overlay.remove();
+        G.showToast('Đã xóa "' + b.name + '"!');
+      });
+    }
+
+    // ============================================================
+    // MODAL XEM ẢNH
+    // ============================================================
+    var modal = document.getElementById('preview-modal');
+    var modalImg = document.getElementById('preview-modal-img');
+
+    function openModal(idx) {
+      modalImg.src = bonsaiData[idx].image;
+      modalImg.alt = bonsaiData[idx].name;
+      modal.classList.add('open');
+    }
+
+    document.getElementById('close-modal').addEventListener('click', function() {
+      modal.classList.remove('open');
+    });
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) modal.classList.remove('open');
+    });
+
+    // ESC đóng modal
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') modal.classList.remove('open');
+    });
+
+  })();
+  </script>
+</body>
+</html>
