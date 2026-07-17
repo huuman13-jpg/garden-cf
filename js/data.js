@@ -55,11 +55,11 @@
   ];
 
   var COFFEE_MENU = [
-    { name: 'Cà Phê Sữa Đá', price: '25.000đ', icon: 'fa-mug-hot' },
-    { name: 'Cà Phê Phin Đen', price: '20.000đ', icon: 'fa-coffee' },
-    { name: 'Bạc Xỉu', price: '30.000đ', icon: 'fa-glass-water' },
-    { name: 'Trà Đào Cam Sả', price: '25.000đ', icon: 'fa-leaf' },
-    { name: 'Matcha Latte', price: '30.000đ', icon: 'fa-mug-saucer' },
+    { name: 'Cà Phê Sữa Đá', price: '35.000đ', icon: 'fa-mug-hot' },
+    { name: 'Cà Phê Phin Đen', price: '30.000đ', icon: 'fa-coffee' },
+    { name: 'Bạc Xỉu', price: '40.000đ', icon: 'fa-glass-water' },
+    { name: 'Trà Đào Cam Sả', price: '45.000đ', icon: 'fa-leaf' },
+    { name: 'Matcha Latte', price: '50.000đ', icon: 'fa-mug-saucer' },
   ];
 
   var DATA_VERSION = 'v5';
