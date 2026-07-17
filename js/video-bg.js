@@ -13,10 +13,11 @@
   // ============================================================
   // 1. CSS VIDEO
   // ============================================================
+  var supportsDvh = window.CSS && CSS.supports && CSS.supports('height', '100dvh');
   video.style.cssText =
     'position:fixed !important;' +
     'top:0 !important;left:0 !important;' +
-    'width:100vw !important;height:100vh !important;' +
+    'width:100vw !important;height:' + (supportsDvh ? '100dvh' : '100vh') + ' !important;' +
     'object-fit:cover !important;' +
     'z-index:-1 !important;' +
     'pointer-events:none !important;' +
